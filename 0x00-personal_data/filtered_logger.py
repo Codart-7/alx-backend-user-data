@@ -31,3 +31,15 @@ class RedactingFormatter(logging.Formatter):
         """a funtion that returns the log message obfuscated"""
         msg = super(RedactingFormatter, self).format(record)
         return filter_datum(self.fields, self.REDACTION, msg, self.SEPARATOR)
+
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
+
+def get_logger() -> logging.Logger:
+    """A logger function"""
+    log = logging.getLogger('user_data')
+    log.propagate = False
+    stream = logging.StreamHandler()
+    stream.setFormatter(RedactingFormatter(PII_FIELDS))
+    log.addHandler(stream)
+    return log
