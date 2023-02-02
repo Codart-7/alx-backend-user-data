@@ -32,14 +32,16 @@ class RedactingFormatter(logging.Formatter):
         msg = super(RedactingFormatter, self).format(record)
         return filter_datum(self.fields, self.REDACTION, msg, self.SEPARATOR)
 
+
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def get_logger() -> logging.Logger:
-    """A logger function"""
-    log = logging.getLogger('user_data')
-    log.propagate = False
-    stream = logging.StreamHandler()
-    stream.setFormatter(RedactingFormatter(PII_FIELDS))
-    log.addHandler(stream)
-    return log
+    """a function called get_logger that takes no arguments"""
+    logger = logging.getLogger('user_data')
+    logger.propagate = False
+    logger.setLevel(logging.INFO)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    logger.addHandler(stream_handler)
+    return logger
